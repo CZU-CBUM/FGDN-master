@@ -14,7 +14,7 @@ for i in range(class_num):
 
 labels = torch.tensor(labels)
 n_trainer = 20
-colors = ['#6495ED', '#FFD700']  # 设置颜色列表，这里使用两个颜色
+colors = ['#6495ED', '#FFD700']  
 
 for iid_beta in [1, 10, 100, 10000]:
     node_partitions = label_dirichlet_partition(labels, len(labels), class_num, n_trainer, beta = iid_beta)
@@ -36,14 +36,10 @@ for iid_beta in [1, 10, 100, 10000]:
         plt.bar(ind, distributions[:, i],
                      bottom = bottom_acc, color=colors[i % len(colors)])
         bottom_acc += distributions[:, i]
-    #plt.axis('off')
     plt.gca().spines['left'].set_visible(False)
     plt.gca().spines['right'].set_visible(False)
-    #plt.gca().yaxis.set_visible(False)
-
     plt.gca().set_xticklabels([])
     plt.gca().set_yticklabels([])
-
     plt.gca().spines['bottom'].set_visible(False)
     plt.gca().spines['top'].set_visible(False)
 
@@ -57,5 +53,4 @@ for iid_beta in [1, 10, 100, 10000]:
         plt.title(f"i.i.d   $\\chi={iid_beta}$", fontsize=35)
     else:
         plt.title(f"Non-i.i.d   $\\chi={iid_beta}$", fontsize=35)
-    plt.savefig(f"label_distribution_beta_{iid_beta}.pdf")
     plt.show()
