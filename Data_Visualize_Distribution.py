@@ -1,4 +1,7 @@
-
+'''
+This code is based on https://github.com/yh-yao/FedGCN
+Y. Yao, W. Jin, S. Ravi, and C. Joe-Wong, "FedGCN: Convergence-Communication Tradeoffs in Federated Training of Graph Convolutional Networks," Advances in Neural Information Processing Systems, vol. 36, 2024.
+'''
 
 from src.utils import label_dirichlet_partition, parition_non_iid
 import torch
@@ -14,10 +17,11 @@ for i in range(class_num):
 
 labels = torch.tensor(labels)
 n_trainer = 20
+label_markers = ['(a)', '(b)', '(c)', '(d)']
 colors = ['#6495ED', '#FFD700']  
 
-for iid_beta in [1, 10, 100, 10000]:
-    node_partitions = label_dirichlet_partition(labels, len(labels), class_num, n_trainer, beta = iid_beta)
+for idx, iid_beta in enumerate([1, 10, 100, 10000]):
+    node_partitions = label_dirichlet_partition(labels, len(labels), class_num, n_trainer, beta=iid_beta)
 
     distributions = []
     for i in range(n_trainer):
@@ -33,24 +37,27 @@ for iid_beta in [1, 10, 100, 10000]:
 
     bottom_acc = distributions[:, 0].clone()
     for i in range(1, class_num):
-        plt.bar(ind, distributions[:, i],
-                     bottom = bottom_acc, color=colors[i % len(colors)])
+        plt.bar(ind, distributions[:, i], bottom=bottom_acc, color=colors[i % len(colors)])
         bottom_acc += distributions[:, i]
+
     plt.gca().spines['left'].set_visible(False)
     plt.gca().spines['right'].set_visible(False)
+
     plt.gca().set_xticklabels([])
     plt.gca().set_yticklabels([])
+
     plt.gca().spines['bottom'].set_visible(False)
     plt.gca().spines['top'].set_visible(False)
 
-    # Remove tick marks on x-axis
     plt.tick_params(axis='x', which='both', bottom=False, top=False)
     plt.tick_params(axis='y', which='both', left=False, right=False)
 
     plt.xlabel("Local Model", fontsize=35)
     plt.ylabel("Label Distribution", fontsize=30)
+    
     if iid_beta == 10000:
         plt.title(f"i.i.d   $\\chi={iid_beta}$", fontsize=35)
     else:
         plt.title(f"Non-i.i.d   $\\chi={iid_beta}$", fontsize=35)
+    plt.text(0.5, -0.12, label_markers[idx], fontsize=25, ha='center', transform=plt.gca().transAxes)
     plt.show()
