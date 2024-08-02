@@ -29,4 +29,4 @@ for SubjectID=1:nSubj
         fprintf('Done the %d subject networks with lamda1 equal to %d!\n',SubjectID,l1);
     end
 end
-save('data\BrainNetSet_HC_SZ_SRC.mat','BrainNetSet');
+save('data\BrainNetSet_MDD_SRC.mat','BrainNetSet');
