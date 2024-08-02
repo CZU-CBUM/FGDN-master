@@ -2,7 +2,7 @@
 import csv
 import numpy as np
 import os
-
+import torch
 import pandas as pd
 import scipy as sp
 
@@ -101,12 +101,6 @@ def create_affinity_graph_from_scores(scores, subject_list):
 
     return graph
 
-mdd_sub_IDs = get_ids()
-# Compute population graph using gender and acquisition site
-graph = create_affinity_graph_from_scores(['SITE_ID', 'SEX', 'AGE_AT_SCAN'], mdd_sub_IDs)
-#np.savetxt('adjacency_matrix.csv', graph, delimiter=',')
-
-
 def normalize(mx):
     """Row-normalize sparse matrix"""
     rowsum = np.array(mx.sum(1))
@@ -116,8 +110,6 @@ def normalize(mx):
     mx = r_mat_inv.dot(mx)
     return mx
 
-
-import torch
 def sparse_mx_to_torch_sparse_tensor(sparse_mx):
     """Convert a scipy sparse matrix to a torch sparse tensor."""
     sparse_mx = sparse_mx.tocoo().astype(np.float32)
